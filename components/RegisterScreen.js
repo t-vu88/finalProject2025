@@ -1,6 +1,6 @@
 // components/RegisterScreen.js
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { ref, get, set } from 'firebase/database';
 import { auth, db } from '../firebaseConfig';
@@ -8,33 +8,35 @@ import { auth, db } from '../firebaseConfig';
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [inviteCode, setInviteCode] = useState('');
+  const [registerCode, setRegisterCode] = useState('');
 
   const handleRegister = async () => {
-    if (!email || !password || !inviteCode) {
+    if (!email || !password || !registerCode) {
       Alert.alert('Täytä kaikki kentät');
       return;
     }
 
     try {
       // Check invite code in Realtime Database
-      const inviteRef = ref(db, `team_invites/${inviteCode}`);
-      const snapshot = await get(inviteRef);
+      const registerCodeRef = ref(db, `kutsukoodi/${registerCode}`);
+      const snapshot = await get(registerCodeRef);
 
       if (!snapshot.exists()) {
         Alert.alert('Virheellinen kutsukoodi');
         return;
       }
 
-      const inviteData = snapshot.val(); // contains teamId and role
+      const registerCodeData = snapshot.val(); // contains teamId and role
+
+      //create user in firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const userId = userCredential.user.uid;
 
-      // Save user to /users
+      // Save user to /users in realtime Db
       await set(ref(db, `users/${userId}`), {
         email: email,
-        teamId: inviteData.teamId,
-        role: inviteData.role,
+        joukkue_id: registerCodeData.joukkue_id,
+        rooli: registerCodeData.rooli,
       });
 
       Alert.alert('Rekisteröityminen onnistui!');
@@ -48,16 +50,44 @@ const RegisterScreen = () => {
       <Text style={styles.title}>Rekisteröidy</Text>
       <TextInput placeholder="Sähköposti" value={email} onChangeText={setEmail} style={styles.input} />
       <TextInput placeholder="Salasana" value={password} onChangeText={setPassword} secureTextEntry style={styles.input} />
-      <TextInput placeholder="Kutsukoodi" value={inviteCode} onChangeText={setInviteCode} style={styles.input} />
-      <Button title="Rekisteröidy" onPress={handleRegister} />
+      <TextInput placeholder="Koodi" value={registerCode} onChangeText={setRegisterCode} style={styles.input} />
+      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+        <Text style={styles.buttonText}>Rekisteröidy</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { padding: 20, marginTop: 80 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
-  input: { borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 6 },
-});
+    container: {
+      padding: 20,
+      marginTop: 80
+    },
+    title: {
+      fontSize: 24,
+      marginBottom: 20,
+      fontWeight: 'bold'
+    },
+    input: {
+      borderWidth: 1,
+      borderColor: '#ccc',
+      padding: 10,
+      marginVertical: 10,
+      borderRadius: 6
+    },
+    button: {
+      backgroundColor: '#007AFF',
+      padding: 12,
+      borderRadius: 6,
+      alignItems: 'center',
+      marginTop: 10
+    },
+    buttonText: {
+      color: '#fff',
+      fontWeight: 'bold',
+      fontSize: 16
+    }
+  });
+  
 
 export default RegisterScreen;
