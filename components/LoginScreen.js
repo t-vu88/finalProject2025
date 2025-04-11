@@ -16,7 +16,7 @@ const LoginScreen = ({ navigation }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       Alert.alert('Kirjautuminen onnistui!');
-      // navigation.navigate('Home'); // Uncomment if you use navigation
+        navigation.navigate('Tapahtumat');
     } catch (error) {
       console.error(error);
       Alert.alert('Virhe kirjautumisessa', error.message);

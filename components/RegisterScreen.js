@@ -1,4 +1,4 @@
-// components/RegisterScreen.js
+
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet, Alert } from 'react-native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
@@ -17,7 +17,7 @@ const RegisterScreen = () => {
     }
 
     try {
-      // Check invite code in Realtime Database
+      // Check code in Realtime Database
       const registerCodeRef = ref(db, `kutsukoodi/${registerCode}`);
       const snapshot = await get(registerCodeRef);
 
