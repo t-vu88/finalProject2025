@@ -26,7 +26,7 @@ const RegisterScreen = () => {
         return;
       }
 
-      const registerCodeData = snapshot.val(); // contains teamId and role
+      const registerCodeData = snapshot.val(); // contains joukkue_id and rooli
 
       //create user in firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
