@@ -55,14 +55,20 @@ const Homepage = ({ navigation }) => {
   
       setLoading(false); // End loading after data is fetched
   
-      // Now navigate to TeamScreen after data is set
-      navigation.navigate('TeamScreen', { 
-        joukkue_id: userTeam, 
-        koodi: userKoodi, 
-        rooli: userRole, 
-        isAuthorizedUser 
+      //navigate to TeamScreen after data is set
+      navigation.reset({
+        index: 0,
+        routes: [{
+          name: 'Joukkueesi',
+          params: {
+            joukkue_id: userTeam,
+            koodi: userKoodi,
+            rooli: userRole,
+            isAuthorizedUser,
+          }
+        }],
       });
-  
+      
     } catch (error) {
       setLoading(false);
       Alert.alert('Error', error.message);
@@ -72,7 +78,9 @@ const Homepage = ({ navigation }) => {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      setIsLoggedIn(false);  // Update the state when logging out
+      setIsLoggedIn(false);
+      setEmail('');           
+      setPassword(''); 
       Alert.alert('Logged out successfully');
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -91,48 +99,36 @@ const Homepage = ({ navigation }) => {
           style={styles.logo}
         />
 
-        <View style={styles.introBox}>
-          <Text style={styles.mainHeading}>Kaikki joukkueesi asiat yhdessä paikassa.</Text>
-          <Text style={styles.subHeading}>Kirjaudu sisään ja pysy mukana</Text>
-        </View>
-
-          {isLoggedIn ? (
-            // Render team-related content if logged in
-            <View style={styles.loggedInContainer}>
-              <Text style={styles.welcomeText}>Welcome to Sipoon Wolf !</Text>
-              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('TeamScreen')}>
-                <Text style={styles.buttonText}>Go to Team</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={handleLogout}>
-                <Text style={styles.buttonText}>Logout</Text>
-              </TouchableOpacity>
+            <View>
+              <View style={styles.introBox}>
+                <Text style={styles.mainHeading}>Kaikki joukkueesi asiat yhdessä paikassa.</Text>
+                <Text style={styles.subHeading}>Kirjaudu sisään ja pysy mukana</Text>
+              </View>
+              <View style={styles.loginContainer}>
+                
+                <TextInput
+                  placeholder="Email"
+                  value={email}
+                  onChangeText={setEmail}
+                  style={styles.input}
+                />
+                <TextInput
+                  placeholder="Password"
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  style={styles.input}
+                />
+                <TouchableOpacity style={styles.button} onPress={handleLogin}>
+                  <Text style={styles.buttonText}>Kirjaudu sisään </Text>
+                </TouchableOpacity>
+                <Text style ={styles.questionText}>Uusi käyttäjä? Rekisteröidy tästä.</Text>
+                {/* Register Button */}
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
+                  <Text style={styles.buttonText}>Registeröidy</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          ) : (
-            // Show login form if not logged in
-            <View style={styles.loginContainer}>
-              <TextInput
-                placeholder="Email"
-                value={email}
-                onChangeText={setEmail}
-                style={styles.input}
-              />
-              <TextInput
-                placeholder="Password"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry
-                style={styles.input}
-              />
-              <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Kirjaudu sisään </Text>
-              </TouchableOpacity>
-              <Text style ={styles.questionText}>Uusi käyttäjä? Rekisteröidy tästä.</Text>
-              {/* Register Button */}
-              <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
-                <Text style={styles.buttonText}>Registeröidy</Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -163,7 +159,7 @@ const styles = StyleSheet.create({
   subHeading: {
     fontSize: 16,
     textAlign: 'center',
-    color: '#555',
+    color: 'black',
   },
   
   container: {

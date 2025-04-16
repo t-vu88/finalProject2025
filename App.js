@@ -12,9 +12,10 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Kotisivu">
-      <Stack.Screen name="Kotisivu" component={HomeScreen} />
+        <Stack.Screen name="Kotisivu" component={HomeScreen} />
+        <Stack.Screen name="Registeröinti" component={RegisterScreen} />
         <Stack.Screen name="Tapahtumat" component={EventScreen} />
-        <Stack.Screen name="TeamScreen" component={TeamScreen} />
+        <Stack.Screen name="Joukkueesi" component={TeamScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
