@@ -1,27 +1,48 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
+import { getDatabase, ref, get } from 'firebase/database';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = async () => {
+  // In LoginScreen.js
+
+const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Täytä sähköposti ja salasana');
       return;
     }
-
+  
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      Alert.alert('Kirjautuminen onnistui!');
-        navigation.navigate('Tapahtumat');
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userId = userCredential.user.uid;
+  
+      // Get the user's data (including koodi, joukkue_id, rooli)
+      const userRef = ref(db, `users/${userId}`);
+      const snapshot = await get(userRef);
+  
+      if (!snapshot.exists()) {
+        Alert.alert('User not found');
+        return;
+      }
+  
+      const userData = snapshot.val();
+      const userRole = userData.rooli;
+      const userKoodi = userData.koodi; 
+      const userTeam = userData.joukkue_id;
+      const isAuthorizedUser = userRole === 'toimihenkilö';  
+  
+      // Navigate to the team screen with relevant information (team and role)
+      navigation.navigate('TeamScreen', { team: userTeam, koodi: userKoodi, rooli: userRole, isAuthorizedUser });
     } catch (error) {
       console.error(error);
       Alert.alert('Virhe kirjautumisessa', error.message);
     }
   };
+  
 
   return (
     <View style={styles.container}>
