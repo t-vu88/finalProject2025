@@ -59,7 +59,7 @@ const Homepage = ({ navigation }) => {
       navigation.reset({
         index: 0,
         routes: [{
-          name: 'Joukkueesi',
+          name: 'TeamScreen',
           params: {
             joukkue_id: userTeam,
             koodi: userKoodi,
@@ -107,13 +107,13 @@ const Homepage = ({ navigation }) => {
               <View style={styles.loginContainer}>
                 
                 <TextInput
-                  placeholder="Email"
+                  placeholder="Sähköposti"
                   value={email}
                   onChangeText={setEmail}
                   style={styles.input}
                 />
                 <TextInput
-                  placeholder="Password"
+                  placeholder="Salasana"
                   value={password}
                   onChangeText={setPassword}
                   secureTextEntry
@@ -124,8 +124,8 @@ const Homepage = ({ navigation }) => {
                 </TouchableOpacity>
                 <Text style ={styles.questionText}>Uusi käyttäjä? Rekisteröidy tästä.</Text>
                 {/* Register Button */}
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Register')}>
-                  <Text style={styles.buttonText}>Registeröidy</Text>
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Rekisteröinti')}>
+                  <Text style={styles.buttonText}>Luo uusi käyttäjätili</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -141,11 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 20,
     marginBottom: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 2, height: 10 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 4,
+    
   },
   
   mainHeading: {
@@ -160,6 +156,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     color: 'black',
+    marginBottom:0
   },
   
   container: {
@@ -182,23 +179,24 @@ const styles = StyleSheet.create({
   logo: {
     width: 300,
     height: 100,
-    marginBottom: 20,
+    marginBottom: 5,
     resizeMode: 'contain',
   },
   loginContainer: {
     width: '100%',
-    padding: 20,
+    padding:5
   },
   loggedInContainer: {
     alignItems: 'center',
   },
   input: {
     borderWidth: 1,
-    padding: 10,
+    padding: 12,
     marginBottom: 10,
     borderRadius: 6,
     width: '100%',
     backgroundColor:'#fffdf5',
+    borderColor:'#ccc'
   
   },
   button: {

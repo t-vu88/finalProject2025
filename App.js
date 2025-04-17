@@ -13,9 +13,9 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Kotisivu">
         <Stack.Screen name="Kotisivu" component={HomeScreen} />
-        <Stack.Screen name="Registeröinti" component={RegisterScreen} />
+        <Stack.Screen name="Rekisteröinti" component={RegisterScreen} />
         <Stack.Screen name="Tapahtumat" component={EventScreen} />
-        <Stack.Screen name="Joukkueesi" component={TeamScreen} />
+        <Stack.Screen name="TeamScreen" component={TeamScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
